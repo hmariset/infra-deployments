@@ -20,6 +20,7 @@ resources:
   - internal-services
   - monitoring-workload-grafana
   - monitoring-workload-logging
+  - monitoring-workload-prometheus
   - external-secrets-operator
   - cluster-secret-store
   - image-controller
