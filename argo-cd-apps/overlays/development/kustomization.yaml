@@ -113,3 +113,8 @@ patches:
       kind: ApplicationSet
       version: v1alpha1
       name: ca-bundle
+  - path: development-overlay-patch.yaml
+    target:
+      kind: ApplicationSet
+      version: v1alpha1
+      name: project-controller
