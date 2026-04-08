@@ -3,8 +3,8 @@ kind: HelmChartInflationGenerator
 metadata:
   name: squid-helm
 name: squid-helm
-repo: oci://quay.io/konflux-ci/caching
-version: 0.1.1394+a886353
+repo: oci://quay.io/redhat-user-workloads/konflux-vanguard-tenant/caching/squid-helm
+version: 0.1.1399_bfe055d-on-pr
 valuesInline:
   installCertManagerComponents: false
   mirrord:
