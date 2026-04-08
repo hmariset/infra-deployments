@@ -4,4 +4,4 @@
   value: https://github.com/hmariset/infra-deployments.git
 - op: replace
   path: /spec/source/targetRevision
-  value: preview-test-caching-bfe055d
+  value: preview-preview-test-caching-bfe055d
