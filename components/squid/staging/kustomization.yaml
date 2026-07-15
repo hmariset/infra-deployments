@@ -34,8 +34,16 @@ patches:
         path: /metadata/annotations/argocd.argoproj.io~1sync-options
         value: Prune=false
   - target:
-      kind: Secret
-      name: artifact-registry-proxy-tls
+      kind: ConfigMap
+      name: artifact-registry-proxy-config
+      namespace: caching
+    patch: |
+      - op: add
+        path: /metadata/annotations/argocd.argoproj.io~1sync-options
+        value: Prune=false
+  - target:
+      kind: ConfigMap
+      name: artifact-registry-proxy-exporter-config
       namespace: caching
     patch: |
       - op: add
@@ -50,16 +58,8 @@ patches:
         path: /metadata/annotations/argocd.argoproj.io~1sync-options
         value: Prune=false
   - target:
-      kind: ConfigMap
-      name: artifact-registry-proxy-config
-      namespace: caching
-    patch: |
-      - op: add
-        path: /metadata/annotations/argocd.argoproj.io~1sync-options
-        value: Prune=false
-  - target:
-      kind: ConfigMap
-      name: artifact-registry-proxy-exporter-config
+      kind: Secret
+      name: artifact-registry-proxy-tls
       namespace: caching
     patch: |
       - op: add

@@ -4,4 +4,4 @@
   value: https://github.com/hmariset/infra-deployments.git
 - op: replace
   path: /spec/template/spec/source/targetRevision
-  value: preview-create-artifact-registry-proxy-component
+  value: main
