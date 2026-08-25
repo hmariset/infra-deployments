@@ -60,6 +60,11 @@ valuesInline:
       - ^https://[a-z0-9]+\.cloudfront\.net/sha256/[a-f0-9]{2}/[a-f0-9]{64}
     size: 192
     maxObjectSize: 128
+  prometheus:
+    serviceMonitor:
+      perSiteTLS:
+        ca:
+          secretName: container-image-proxy-tls
   tlsOutgoingOptions:
     caFile: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
   volumes:
