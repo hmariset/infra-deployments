@@ -1,0 +1,30 @@
+# The Go suite submits child PipelineRuns and reads their status and logs.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: proxy-regression-tests
+  namespace: verification-vanguard-proxy-tenant
+rules:
+  - apiGroups: ["tekton.dev"]
+    resources: ["pipelineruns"]
+    verbs: ["create", "get", "delete"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["list"]
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: proxy-regression-tests
+  namespace: verification-vanguard-proxy-tenant
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: proxy-regression-tests
+subjects:
+  - kind: ServiceAccount
+    name: verification-runner
+    namespace: verification-vanguard-proxy-runner
