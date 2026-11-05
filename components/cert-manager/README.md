@@ -2,6 +2,10 @@
 
 Feature: [KONFLUX-16057](https://redhat.atlassian.net/browse/KONFLUX-16057).
 
+The current implementation covers development and staging only. Production
+installation, upgrades and trust-manager enablement are deferred to separate
+follow-up changes after non-production validation.
+
 The member-cluster ApplicationSet remains the existing owner of
 `openshift-cert-manager-operator` Subscriptions in `cert-manager-operator`.
 Application names remain `cert-manager-<cluster-name>`. Reuse those resources;
@@ -31,26 +35,16 @@ not change production ApplicationSet output. Each selected cluster has its own
 component overlay and exactly one rendered OperatorGroup and Subscription.
 The Application uses `CreateNamespace=true` for the Operator namespace.
 
-Production rollout is separate. Its intended member cohorts are:
+Production resources remain unchanged. Production destinations and rollout
+cohorts will be addressed in the production follow-up.
 
-| Cohort | Destinations |
-| --- | --- |
-| Ring 2 | `kflux-fedora-01`, `kflux-ocp-p01`, `kflux-osp-p01`, `kflux-prd-es01`, `kflux-prd-rh03`, `kflux-rhel-p01`, `stone-prod-p01`, `kflux-lw-p01` |
-| Ring 3 | `stone-prd-rh01`, `stone-prod-p02` |
-| Ring 4 | `kflux-prd-rh02` |
-
-This staging change does not modify production resources. Adding the missing
-`kflux-prd-es01` Operator mapping and production selection belongs to the
-production follow-up, after staging evidence. Apply future version/feature
-overrides in the selected per-cluster overlays, not in a shared production base.
-
-The four common clusters are owned through
+The common staging clusters are owned through
 `redhat-appstudio/infra-common-deployments`: internal staging
-`kflux-c-stg-i01`, external staging `kflux-c-stg-e01`, internal production
-`kflux-c-prd-i01`, external production `kflux-c-prd-e01`. Their local Argo
-instance must be the sole owner of their Operator installation.
+`kflux-c-stg-i01` and external staging `kflux-c-stg-e01`. Their local Argo
+instance must be the sole owner of their Operator installation. Common-cluster
+production changes are also outside the current scope.
 
-## Existing settings and the upgrade-control decision
+## Existing settings and upgrade control
 
 This change preserves the existing package, catalog, `stable-v1` channel,
 Automatic install-plan approval and other operand settings. It does not select
@@ -58,10 +52,10 @@ a new CSV, opt into the TP trust-manager operand or create a TrustManager CR.
 
 Automatic approval can upgrade every Subscription when a new channel release
 appears, independently of GitOps rings. Per-cluster source paths alone do not
-prevent that. A decision on production Manual approval or another supported
-upgrade gate is pending; controlled production Operator upgrades cannot be
-claimed until that gate is agreed and implemented. Do not use `startingCSV` as
-an upgrade pin with Automatic approval.
+prevent that. Production upgrade-control decisions belong to the separate
+production follow-up and do not block this development/staging configuration
+change. This change preserves approval settings in every environment. Do not
+use `startingCSV` as an upgrade pin with Automatic approval.
 
 ## Read-only render checks
 
