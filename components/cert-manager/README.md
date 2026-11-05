@@ -59,11 +59,20 @@ use `startingCSV` as an upgrade pin with Automatic approval.
 
 ## Read-only render checks
 
-Run `python hack/test-cert-manager-coverage.py` with PyYAML and Kustomize on the
-PATH, or set `KUSTOMIZE` to its executable. The workflow runs this check on
-relevant PRs. It checks actual rendered source paths and prerequisites, excludes
-common/production/unlisted clusters from staging and retains dynamic dev
-selection. These are local render checks, not cluster E2E tests.
+Build the affected roots and the added staging Operator overlay locally:
+
+```bash
+kustomize build argo-cd-apps/overlays/development
+kustomize build argo-cd-apps/overlays/staging-downstream
+kustomize build argo-cd-apps/overlays/konflux-public-staging
+kustomize build components/cert-manager/staging/kflux-stg-es01
+```
+
+Review the rendered cert-manager ApplicationSet selectors and source paths.
+Confirm staging includes only the configured member destinations, development
+retains dynamic member selection, and each selected component overlay renders
+one OperatorGroup and Subscription. Rendering does not validate live ownership
+or certificate issuance.
 
 ## Rollout and certificate-issuance evidence
 
