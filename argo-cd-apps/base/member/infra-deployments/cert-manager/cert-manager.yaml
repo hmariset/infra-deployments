@@ -12,9 +12,8 @@ spec:
               values:
                 sourceRoot: components/cert-manager
                 environment: staging
-                # This app must have cluster specific configurations.
-                # empty-base is an overlay that just has the namespace resource.
-                # This allows to gradually deploy the new UI to all the clusters.
+                # Environment overlays select explicitly configured clusters.
+                # Listed clusters override this fallback with their overlay.
                 clusterDir: empty-base
           - list:
               elements:

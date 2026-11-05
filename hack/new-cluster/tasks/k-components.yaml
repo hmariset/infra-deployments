@@ -1,6 +1,22 @@
 # Add the cluster to all relevant k-components that patch ApplicationSets with the appropriate deploy target clusters.
 # This assumes that the new cluster is a tenant cluster since EaaS clusters are being decommissioned.
 
+- name: Include the new staging member in cert-manager selection
+  tags: [applicationsets]
+  command:
+    argv:
+      - yq
+      - -i
+      - eval
+      - >-
+        (.[] | select(.path == "/spec/generators/0/selector") |
+        .value.matchExpressions[] | select(.key == "nameNormalized") |
+        .values) |= ((. + [strenv(CERT_MANAGER_NEW_CLUSTER)]) | unique)
+      - "{{ dst }}/argo-cd-apps/k-components/cert-manager-staging-clusters/staging-clusters.yaml"
+  environment:
+    CERT_MANAGER_NEW_CLUSTER: "{{ shortname }}"
+  when: env == 'staging'
+
 - name: Add cluster to `deploy-to-all-{{ env }}-clusters` k-component
   tags: [applicationsets]
   command: |
