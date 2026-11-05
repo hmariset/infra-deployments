@@ -13,30 +13,28 @@ do not create another Subscription or move common clusters into this selector.
 
 ## Destinations and promotion
 
-Development continues to select clusters labelled
-`appstudio.redhat.com/member-cluster: "true"`, including dynamically named
-preview clusters. Both staging roots use `cert-manager-staging-clusters` to
-select only the configured staging members:
+Member-cluster mappings are maintained in the existing
+`argo-cd-apps/base/member/infra-deployments/cert-manager/cert-manager.yaml`
+ApplicationSet. The missing `kflux-stg-es01` mapping is added alongside the
+other staging entries and points to `components/cert-manager/staging/kflux-stg-es01`
+when rendered by either staging root. Its overlay reuses the staging base,
+which renders one OperatorGroup and Subscription.
 
-- `stone-stage-p01`
-- `stone-stg-rh01`
-- `lightwell-dev` (existing staging destination)
-- `kflux-stg-es01`
-- `kflux-stg-p02`
-- `kflux-hub-stg-01`
+The existing member-cluster selector is preserved, including dynamic
+development registrations. The shared mapping list contains staging and
+production names; it does not register clusters or filter them by environment.
+Before syncing, confirm that each environment's Argo instance registers only
+its intended member destinations. The Application uses `CreateNamespace=true`
+for the Operator namespace.
 
-The existing new-cluster playbook adds new staging members to this selector as
-well as their source mapping and component overlay. Run its `applicationsets`
-and `components` steps together; adding a registration alone does not enable
-an unconfigured destination.
+The existing new-cluster playbook updates this ApplicationSet list and creates
+component overlays through its `applicationsets` and `components` steps. No
+additional cert-manager cluster list or bootstrap task is needed.
 
-The staged `kflux-stg-es01` mapping is added by the staging component, so it does
-not change production ApplicationSet output. Each selected cluster has its own
-component overlay and exactly one rendered OperatorGroup and Subscription.
-The Application uses `CreateNamespace=true` for the Operator namespace.
-
-Production resources remain unchanged. Production destinations and rollout
-cohorts will be addressed in the production follow-up.
+Existing production mappings and Operator manifests remain unchanged. The added
+staging mapping appears in the shared ApplicationSet rendered by all roots;
+it does not change Operator settings for existing production destinations.
+Production rollout remains a separate follow-up.
 
 The common staging clusters are owned through
 `redhat-appstudio/infra-common-deployments`: internal staging
@@ -69,10 +67,11 @@ kustomize build components/cert-manager/staging/kflux-stg-es01
 ```
 
 Review the rendered cert-manager ApplicationSet selectors and source paths.
-Confirm staging includes only the configured member destinations, development
-retains dynamic member selection, and each selected component overlay renders
-one OperatorGroup and Subscription. Rendering does not validate live ownership
-or certificate issuance.
+Confirm `kflux-stg-es01` selects its staging overlay, the existing member-cluster
+selector remains in place, and existing production mappings and Operator
+settings are unchanged. Each selected component overlay must render one
+OperatorGroup and Subscription. Rendering does not validate live registrations,
+ownership or certificate issuance.
 
 ## Rollout and certificate-issuance evidence
 

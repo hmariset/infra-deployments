@@ -9,9 +9,6 @@ resources:
   - ../../base/ca-bundle
   - ../../base/cert-manager-trusted-ca
 
-components:
-  - ../../k-components/cert-manager-staging-clusters
-
 patchesStrategicMerge:
   - delete-applications.yaml
 

@@ -12,8 +12,7 @@ spec:
               values:
                 sourceRoot: components/cert-manager
                 environment: staging
-                # Environment overlays select explicitly configured clusters.
-                # Listed clusters override this fallback with their overlay.
+                # Cluster-specific overlays are selected by the list below.
                 clusterDir: empty-base
           - list:
               elements:
@@ -45,6 +44,8 @@ spec:
                   values.clusterDir: kflux-lw-p01
                 - nameNormalized: kflux-stg-p02
                   values.clusterDir: kflux-stg-p02
+                - nameNormalized: kflux-stg-es01
+                  values.clusterDir: kflux-stg-es01
                 - nameNormalized: kflux-hub-stg-01
                   values.clusterDir: kflux-hub-stg-01
   template:

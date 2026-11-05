@@ -6,9 +6,6 @@ resources:
   - ../../base/backup
   - ../../base/monitoring-blackbox
 
-components:
-  - ../../k-components/cert-manager-staging-clusters
-
 namespace: konflux-public-staging
 patchesStrategicMerge:
   - delete-applications.yaml
