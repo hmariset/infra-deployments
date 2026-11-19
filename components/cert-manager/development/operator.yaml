@@ -22,3 +22,8 @@ spec:
   source: redhat-operators
   sourceNamespace: openshift-marketplace
   installPlanApproval: Automatic
+  config:
+    env:
+      # Apply only after live Application and Bundle CRD preservation is verified.
+      - name: UNSUPPORTED_ADDON_FEATURES
+        value: "TrustManager=true"
